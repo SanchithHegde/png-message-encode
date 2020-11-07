@@ -6,7 +6,7 @@ use anyhow::{ensure, Error, Result};
 use std::ops::BitAnd;
 
 #[derive(Debug, Eq, PartialEq)]
-struct ChunkType {
+pub(crate) struct ChunkType {
     ancillary: u8,
     private: u8,
     reserved: u8,
