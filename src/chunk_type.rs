@@ -1,4 +1,4 @@
-use std::convert::TryFrom;
+use std::convert::{TryFrom, TryInto};
 use std::fmt::{Debug, Display, Formatter};
 use std::str::FromStr;
 
@@ -62,22 +62,12 @@ impl FromStr for ChunkType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         ensure!(
-            s.is_ascii(),
-            "String '{}' has characters outside the ASCII range",
+            s.chars().all(|c| c.is_ascii_alphabetic()),
+            "{} is not ASCII alphabetic",
             s
         );
 
-        let mut bytes: [u8; 4] = [0; 4];
-        bytes.copy_from_slice(s.as_bytes());
-
-        for byte in bytes.iter() {
-            ensure!(
-                byte.is_ascii_lowercase() || byte.is_ascii_uppercase(),
-                "{} is not an alphabet",
-                byte
-            );
-        }
-
+        let bytes: [u8; 4] = s.as_bytes().try_into()?;
         Self::try_from(bytes)
     }
 }
