@@ -1,11 +1,11 @@
 [package]
 name    = "png-message-encode"
 version = "0.1.0"
-authors = ["Sanchith Hegde <sanchith.hegde01@gmail.com>"]
+authors = [ "Sanchith Hegde <sanchith.hegde01@gmail.com>" ]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.34"
+anyhow = "1.0.38"
 crc    = "1.8.1"
