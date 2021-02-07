@@ -46,8 +46,14 @@ impl Chunk {
         String::from_utf8(self.chunk_data.clone()).map_err(|error| anyhow!(error))
     }
 
-    fn as_bytes(&self) -> Vec<u8> {
-        self.chunk_data.clone()
+    pub fn as_bytes(&self) -> Vec<u8> {
+        let mut bytes = Vec::new();
+        bytes.append(&mut self.length.to_be_bytes().to_vec());
+        bytes.append(&mut self.chunk_type.bytes().to_vec());
+        bytes.append(&mut self.chunk_data.clone());
+        bytes.append(&mut self.crc.to_be_bytes().to_vec());
+
+        bytes
     }
 }
 
