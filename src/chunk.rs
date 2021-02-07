@@ -14,6 +14,18 @@ pub(crate) struct Chunk {
 }
 
 impl Chunk {
+    pub fn new(chunk_type: ChunkType, chunk_data: Vec<u8>) -> Self {
+        let mut crc_data = chunk_type.bytes().to_vec();
+        crc_data.append(&mut chunk_data.clone());
+        let crc = crc32::checksum_ieee(&crc_data);
+        Chunk {
+            length: chunk_data.len() as u32,
+            chunk_type,
+            chunk_data,
+            crc,
+        }
+    }
+
     fn length(&self) -> u32 {
         self.length
     }
