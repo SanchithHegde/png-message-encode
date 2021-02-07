@@ -6,7 +6,7 @@ use crc::crc32;
 
 use crate::chunk_type::ChunkType;
 
-struct Chunk {
+pub(crate) struct Chunk {
     length: u32,
     chunk_type: ChunkType,
     chunk_data: Vec<u8>,
@@ -18,7 +18,7 @@ impl Chunk {
         self.length
     }
 
-    fn chunk_type(&self) -> &ChunkType {
+    pub fn chunk_type(&self) -> &ChunkType {
         &self.chunk_type
     }
 
@@ -26,11 +26,11 @@ impl Chunk {
         &self.chunk_data
     }
 
-    fn crc(&self) -> u32 {
+    pub fn crc(&self) -> u32 {
         self.crc
     }
 
-    fn data_as_string(&self) -> Result<String> {
+    pub fn data_as_string(&self) -> Result<String> {
         String::from_utf8(self.chunk_data.clone()).map_err(|error| anyhow!(error))
     }
 
