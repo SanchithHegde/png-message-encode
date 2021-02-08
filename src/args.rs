@@ -9,7 +9,7 @@ use clap::{AppSettings, Clap, ValueHint};
     setting = AppSettings::ColoredHelp,
     setting = AppSettings::SubcommandRequiredElseHelp,
 )]
-pub(crate) enum Opt {
+pub(crate) enum SubCommand {
     /// Encode a message in a PNG file.
     #[clap(
         setting = AppSettings::ColoredHelp,
