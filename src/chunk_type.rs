@@ -1,9 +1,9 @@
 use std::convert::{TryFrom, TryInto};
 use std::fmt::{Debug, Display, Formatter};
+use std::ops::BitAnd;
 use std::str::FromStr;
 
 use anyhow::{ensure, Error, Result};
-use std::ops::BitAnd;
 
 #[derive(Debug, Eq, PartialEq)]
 pub(crate) struct ChunkType {
