@@ -10,64 +10,73 @@ use clap::{AppSettings, Clap, ValueHint};
     setting = AppSettings::SubcommandRequiredElseHelp,
 )]
 pub(crate) enum SubCommand {
-    /// Encode a message in a PNG file.
-    #[clap(
-        setting = AppSettings::ColoredHelp,
-        setting = AppSettings::ArgRequiredElseHelp,
-    )]
-    Encode {
-        /// Path to the PNG file to encode the message in.
-        #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
-        in_file: PathBuf,
+    Encode(Encode),
+    Decode(Decode),
+    Remove(Remove),
+    Print(Print),
+}
 
-        /// A 4-character long alphabetical ASCII string.
-        chunk_type: String,
+/// Encode a message in a PNG file.
+#[derive(Clap, Debug)]
+#[clap(
+    setting = AppSettings::ColoredHelp,
+    setting = AppSettings::ArgRequiredElseHelp,
+)]
+pub(crate) struct Encode {
+    /// Path to the PNG file to encode the message in.
+    #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
+    pub(crate) in_file: PathBuf,
 
-        /// Message to encode.
-        message: String,
+    /// A 4-character long alphabetical ASCII string.
+    pub(crate) chunk_type: String,
 
-        /// Path to the PNG file to save the encoded image as. Optional. If this is not specified,
-        /// the input PNG file is updated in place.
-        #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
-        out_file: Option<PathBuf>,
-    },
+    /// Message to encode.
+    pub(crate) message: String,
 
-    /// Decode a message in a PNG file.
-    #[clap(
-        setting = AppSettings::ColoredHelp,
-        setting = AppSettings::ArgRequiredElseHelp,
-    )]
-    Decode {
-        /// Path to the PNG file to decode the message from.
-        #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
-        in_file: PathBuf,
+    /// Path to the PNG file to save the encoded image as. Optional. If this is not specified, the
+    /// input PNG file is updated in place.
+    #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
+    pub(crate) out_file: Option<PathBuf>,
+}
 
-        /// A 4-character long alphabetical ASCII string.
-        chunk_type: String,
-    },
+/// Decode a message in a PNG file.
+#[derive(Clap, Debug)]
+#[clap(
+    setting = AppSettings::ColoredHelp,
+    setting = AppSettings::ArgRequiredElseHelp,
+)]
+pub(crate) struct Decode {
+    /// Path to the PNG file to decode the message from.
+    #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
+    pub(crate) in_file: PathBuf,
 
-    /// Remove a message from a PNG file.
-    #[clap(
-        setting = AppSettings::ColoredHelp,
-        setting = AppSettings::ArgRequiredElseHelp,
-    )]
-    Remove {
-        /// Path to the PNG file to remove the message from.
-        #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
-        in_file: PathBuf,
+    /// A 4-character long alphabetical ASCII string.
+    pub(crate) chunk_type: String,
+}
 
-        /// A 4-character long alphabetical ASCII string.
-        chunk_type: String,
-    },
+/// Remove a message from a PNG file.
+#[derive(Clap, Debug)]
+#[clap(
+    setting = AppSettings::ColoredHelp,
+    setting = AppSettings::ArgRequiredElseHelp,
+)]
+pub(crate) struct Remove {
+    /// Path to the PNG file to remove the message from.
+    #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
+    pub(crate) in_file: PathBuf,
 
-    /// Print all messages in a PNG file. This could generate text which is NOT human-readable.
-    #[clap(
-        setting = AppSettings::ColoredHelp,
-        setting = AppSettings::ArgRequiredElseHelp,
-    )]
-    Print {
-        /// Path to the PNG file to print all the messages.
-        #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
-        in_file: PathBuf,
-    },
+    /// A 4-character long alphabetical ASCII string.
+    pub(crate) chunk_type: String,
+}
+
+/// Print all messages in a PNG file. This could generate text which is NOT human-readable.
+#[derive(Clap, Debug)]
+#[clap(
+    setting = AppSettings::ColoredHelp,
+    setting = AppSettings::ArgRequiredElseHelp,
+)]
+pub(crate) struct Print {
+    /// Path to the PNG file to print all the messages.
+    #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
+    pub(crate) in_file: PathBuf,
 }
