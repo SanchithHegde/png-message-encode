@@ -11,9 +11,10 @@ license     = "MIT OR Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.38"
-clap   = "3.0.0-beta.2"
-crc    = "1.8.1"
+anyhow    = "1.0.38"
+clap      = "3.0.0-beta.2"
+crc       = "1.8.1"
+thiserror = "1.0.23"
 
 [[bin]]
 name = "pngme"
