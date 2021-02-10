@@ -1,9 +1,6 @@
-use std::convert::{TryFrom, TryInto};
-use std::fmt::{Debug, Display, Formatter};
 use std::ops::BitAnd;
-use std::str::FromStr;
 
-use anyhow::{ensure, Error, Result};
+use crate::error::Error;
 
 #[derive(Debug, Eq, PartialEq)]
 pub(crate) struct ChunkType {
@@ -44,10 +41,14 @@ impl ChunkType {
     }
 }
 
-impl TryFrom<[u8; 4]> for ChunkType {
+impl std::convert::TryFrom<[u8; 4]> for ChunkType {
     type Error = Error;
 
     fn try_from(value: [u8; 4]) -> Result<Self, Self::Error> {
+        if !value.iter().all(|c| c.is_ascii_alphabetic()) {
+            return Err(Error::ChunkTypeNotAsciiAlphabetic);
+        }
+
         Ok(Self {
             ancillary: value[0],
             private: value[1],
@@ -57,28 +58,35 @@ impl TryFrom<[u8; 4]> for ChunkType {
     }
 }
 
-impl FromStr for ChunkType {
+impl std::str::FromStr for ChunkType {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        ensure!(
-            s.chars().all(|c| c.is_ascii_alphabetic()),
-            "{} is not ASCII alphabetic",
-            s
-        );
+        let s = s.as_bytes();
 
-        let bytes: [u8; 4] = s.as_bytes().try_into()?;
-        Self::try_from(bytes)
+        if s.len() != 4 {
+            return Err(Error::InvalidChunkTypeLength(s.len()));
+        }
+
+        if !s.iter().all(|c| c.is_ascii_alphabetic()) {
+            return Err(Error::ChunkTypeNotAsciiAlphabetic);
+        }
+
+        Ok(Self {
+            ancillary: s[0],
+            private: s[1],
+            reserved: s[2],
+            safe_to_copy: s[3],
+        })
     }
 }
 
-impl Display for ChunkType {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}",
-            std::str::from_utf8(&self.bytes()).expect("Failed to convert bytes to string")
-        )
+impl std::fmt::Display for ChunkType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match std::str::from_utf8(&self.bytes()) {
+            Ok(s) => write!(f, "{}", s),
+            Err(_) => Err(std::fmt::Error),
+        }
     }
 }
 
