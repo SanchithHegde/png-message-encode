@@ -14,3 +14,7 @@ crc    = "1.8.1"
 [[bin]]
 name = "pngme"
 path = "src/main.rs"
+
+[profile.release]
+codegen-units = 1
+lto           = "fat"
