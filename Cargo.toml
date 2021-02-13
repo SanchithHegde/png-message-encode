@@ -1,8 +1,12 @@
 [package]
-name    = "png-message-encode"
-version = "0.1.0"
-authors = [ "Sanchith Hegde <sanchith.hegde01@gmail.com>" ]
-edition = "2018"
+name        = "png-message-encode"
+version     = "0.1.0"
+authors     = [ "Sanchith Hegde <sanchith.hegde01@gmail.com>" ]
+edition     = "2018"
+description = "CLI tool to encode messages in PNG files."
+readme      = "README.md"
+repository  = "https://github.com/SanchithHegde/png-message-encode"
+license     = "MIT OR Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
