@@ -1,8 +1,3 @@
-use std::convert::{TryFrom, TryInto};
-use std::fmt::{Display, Formatter};
-
-use crc::crc32;
-
 use crate::chunk_type::ChunkType;
 use crate::error::Error;
 
@@ -15,6 +10,8 @@ pub(crate) struct Chunk {
 
 impl Chunk {
     pub fn new(chunk_type: ChunkType, chunk_data: Vec<u8>) -> Self {
+        use crc::crc32;
+
         let mut crc_data = chunk_type.bytes().to_vec();
         crc_data.append(&mut chunk_data.clone());
         let crc = crc32::checksum_ieee(&crc_data);
@@ -57,10 +54,14 @@ impl Chunk {
     }
 }
 
-impl TryFrom<&[u8]> for Chunk {
+impl std::convert::TryFrom<&[u8]> for Chunk {
     type Error = Error;
 
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+        use std::convert::TryInto;
+
+        use crc::crc32;
+
         let length = u32::from_be_bytes(value[0..4].try_into()?);
         let chunk_type: [u8; 4] = value[4..8].try_into()?;
         let chunk_type = ChunkType::try_from(chunk_type)?;
@@ -80,8 +81,8 @@ impl TryFrom<&[u8]> for Chunk {
     }
 }
 
-impl Display for Chunk {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl std::fmt::Display for Chunk {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
             "{} (Length: {}, Data: {}, CRC: {})",
@@ -96,6 +97,7 @@ impl Display for Chunk {
 
 #[cfg(test)]
 mod tests {
+    use std::convert::TryFrom;
     use std::str::FromStr;
 
     use crate::chunk_type::ChunkType;
