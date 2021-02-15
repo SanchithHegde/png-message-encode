@@ -1,5 +1,6 @@
 use thiserror::Error;
 
+#[allow(clippy::enum_variant_names)]
 #[derive(Debug, Error)]
 pub(crate) enum Error {
     #[error("chunk type is not ASCII alphabetic")]
