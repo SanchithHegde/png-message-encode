@@ -1,5 +1,3 @@
-use std::ops::BitAnd;
-
 use crate::error::Error;
 
 #[derive(Debug, Eq, PartialEq)]
@@ -25,18 +23,26 @@ impl ChunkType {
     }
 
     fn is_critical(&self) -> bool {
+        use std::ops::BitAnd;
+
         self.ancillary.bitand(32u8) == 0u8
     }
 
     fn is_public(&self) -> bool {
+        use std::ops::BitAnd;
+
         self.private.bitand(32u8) == 0u8
     }
 
     fn is_reserved_bit_valid(&self) -> bool {
+        use std::ops::BitAnd;
+
         self.reserved.bitand(32u8) == 0u8
     }
 
     fn is_safe_to_copy(&self) -> bool {
+        use std::ops::BitAnd;
+
         self.safe_to_copy.bitand(32u8) == 32u8
     }
 }
