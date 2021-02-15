@@ -98,9 +98,6 @@ impl std::fmt::Display for Chunk {
 #[cfg(test)]
 mod tests {
     use std::convert::TryFrom;
-    use std::str::FromStr;
-
-    use crate::chunk_type::ChunkType;
 
     use super::*;
 
