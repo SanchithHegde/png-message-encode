@@ -1,10 +1,10 @@
 use std::convert::{TryFrom, TryInto};
 use std::fmt::{Display, Formatter};
 
-use anyhow::{anyhow, ensure, Context, Error, Result};
 use crc::crc32;
 
 use crate::chunk_type::ChunkType;
+use crate::error::Error;
 
 pub(crate) struct Chunk {
     length: u32,
@@ -42,8 +42,8 @@ impl Chunk {
         self.crc
     }
 
-    pub fn data_as_string(&self) -> Result<String> {
-        String::from_utf8(self.chunk_data.clone()).map_err(|error| anyhow!(error))
+    pub fn data_as_string(&self) -> Result<String, Error> {
+        Ok(String::from_utf8(self.chunk_data.clone())?)
     }
 
     pub fn as_bytes(&self) -> Vec<u8> {
@@ -61,24 +61,15 @@ impl TryFrom<&[u8]> for Chunk {
     type Error = Error;
 
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-        let length = u32::from_be_bytes(
-            value[0..4]
-                .try_into()
-                .with_context(|| "Failed to find length of chunk")?,
-        );
+        let length = u32::from_be_bytes(value[0..4].try_into()?);
         let chunk_type: [u8; 4] = value[4..8].try_into()?;
         let chunk_type = ChunkType::try_from(chunk_type)?;
         let chunk_data = value[8..8 + length as usize].to_vec();
-        let crc = u32::from_be_bytes(
-            value[8 + length as usize..]
-                .try_into()
-                .with_context(|| "Failed to calculate chunk crc")?,
-        );
+        let crc = u32::from_be_bytes(value[8 + length as usize..].try_into()?);
 
-        ensure!(
-            crc32::checksum_ieee(&value[4..8 + length as usize]) == crc,
-            "Calculated CRC doesn't match with CRC in chunk"
-        );
+        if crc32::checksum_ieee(&value[4..8 + length as usize]) != crc {
+            return Err(Error::CrcMismatch);
+        }
 
         Ok(Chunk {
             length,
