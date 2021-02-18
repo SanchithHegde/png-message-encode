@@ -1,5 +1,4 @@
-use std::convert::{TryFrom, TryInto};
-use std::fmt::{Display, Formatter};
+use std::convert::TryInto;
 
 use crate::{chunk::Chunk, chunk_type::ChunkType, error::Error};
 
@@ -56,7 +55,7 @@ impl Png {
     }
 }
 
-impl TryFrom<&[u8]> for Png {
+impl std::convert::TryFrom<&[u8]> for Png {
     type Error = Error;
 
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
@@ -99,8 +98,8 @@ impl TryFrom<&[u8]> for Png {
     }
 }
 
-impl Display for Png {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl std::fmt::Display for Png {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "*** BEGIN PNG FILE ***")?;
         writeln!(f, "Number of chunks: {}", self.chunks.len())?;
         for (i, chunk) in self.chunks.iter().enumerate() {
