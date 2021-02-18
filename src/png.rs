@@ -1,9 +1,4 @@
-use std::convert::{TryFrom, TryInto};
-use std::fmt::{Display, Formatter};
-
-use anyhow::{anyhow, ensure, Error, Result};
-
-use crate::{chunk::Chunk, chunk_type::ChunkType};
+use crate::{chunk::Chunk, chunk_type::ChunkType, error::Error};
 
 struct Png {
     chunks: Vec<Chunk>,
@@ -20,7 +15,9 @@ impl Png {
         self.chunks.push(chunk);
     }
 
-    fn remove_chunk(&mut self, chunk_type: &str) -> Result<Chunk> {
+    fn remove_chunk(&mut self, chunk_type: &str) -> Result<Chunk, Error> {
+        use std::str::FromStr;
+
         if let Some(index) = self
             .chunks
             .iter()
@@ -28,7 +25,7 @@ impl Png {
         {
             Ok(self.chunks.remove(index))
         } else {
-            Err(anyhow!("Chunk of type \"{}\" not found"))
+            Err(Error::ChunkTypeNotFound(ChunkType::from_str(chunk_type)?))
         }
     }
 
@@ -56,14 +53,20 @@ impl Png {
     }
 }
 
-impl TryFrom<&[u8]> for Png {
+impl std::convert::TryFrom<&[u8]> for Png {
     type Error = Error;
 
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-        ensure!(value.len() > 8, "Invalid length");
+        use std::convert::TryInto;
+
+        if value.len() < 8 {
+            return Err(Error::InvalidPngFileSize(value.len()));
+        }
 
         let header = &value[..8];
-        ensure!(header == Png::STANDARD_HEADER, "Header mismatch");
+        if header != Png::STANDARD_HEADER {
+            return Err(Error::PngHeaderMismatch);
+        }
 
         let mut png = Png { chunks: Vec::new() };
 
@@ -84,7 +87,9 @@ impl TryFrom<&[u8]> for Png {
             ptr += 4;
 
             let chunk = Chunk::new(chunk_type, chunk_data);
-            ensure!(crc == chunk.crc(), "CRC mismatch");
+            if crc != chunk.crc() {
+                return Err(Error::CrcMismatch);
+            }
 
             png.append_chunk(chunk);
         }
@@ -93,8 +98,8 @@ impl TryFrom<&[u8]> for Png {
     }
 }
 
-impl Display for Png {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl std::fmt::Display for Png {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "*** BEGIN PNG FILE ***")?;
         writeln!(f, "Number of chunks: {}", self.chunks.len())?;
         for (i, chunk) in self.chunks.iter().enumerate() {
@@ -112,7 +117,6 @@ mod tests {
     use crate::chunk::Chunk;
     use crate::chunk_type::ChunkType;
     use std::convert::TryFrom;
-    use std::str::FromStr;
 
     fn testing_chunks() -> Vec<Chunk> {
         let mut chunks = Vec::new();
@@ -129,7 +133,7 @@ mod tests {
         Png::from_chunks(chunks)
     }
 
-    fn chunk_from_strings(chunk_type: &str, data: &str) -> Result<Chunk> {
+    fn chunk_from_strings(chunk_type: &str, data: &str) -> Result<Chunk, Error> {
         use std::str::FromStr;
 
         let chunk_type = ChunkType::from_str(chunk_type)?;
