@@ -74,24 +74,14 @@ impl std::convert::TryFrom<&[u8]> for Png {
         let value = &value[8..];
         while ptr < value.len() {
             let length = u32::from_be_bytes(value[ptr..ptr + 4].try_into()?) as usize;
-            ptr += 4;
+            let offset = 4 + // 4 bytes for the chunk length
+                4 + // 4 bytes for the chunk type
+                length + // `length` bytes for the chunk data
+                4; // 4 bytes for the chunk CRC
 
-            let chunk_type: [u8; 4] = value[ptr..ptr + 4].try_into()?;
-            let chunk_type = ChunkType::try_from(chunk_type)?;
-            ptr += 4;
-
-            let chunk_data = value[ptr..ptr + length].to_vec();
-            ptr += length;
-
-            let crc = u32::from_be_bytes(value[ptr..ptr + 4].try_into()?);
-            ptr += 4;
-
-            let chunk = Chunk::new(chunk_type, chunk_data);
-            if crc != chunk.crc() {
-                return Err(Error::CrcMismatch);
-            }
-
+            let chunk = Chunk::try_from(&value[ptr..(ptr + offset)])?;
             png.append_chunk(chunk);
+            ptr += offset;
         }
 
         Ok(png)
