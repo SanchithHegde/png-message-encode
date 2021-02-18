@@ -1,5 +1,3 @@
-use std::convert::TryInto;
-
 use crate::{chunk::Chunk, chunk_type::ChunkType, error::Error};
 
 struct Png {
@@ -59,6 +57,8 @@ impl std::convert::TryFrom<&[u8]> for Png {
     type Error = Error;
 
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
+        use std::convert::TryInto;
+
         if value.len() < 8 {
             return Err(Error::InvalidPngFileSize(value.len()));
         }
