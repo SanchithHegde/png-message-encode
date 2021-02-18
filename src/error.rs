@@ -17,4 +17,13 @@ pub(crate) enum Error {
 
     #[error("failed to convert slice to array")]
     TryFromSliceError(#[from] std::array::TryFromSliceError),
+
+    #[error("chunk of type {0} not found")]
+    ChunkTypeNotFound(crate::chunk_type::ChunkType),
+
+    #[error("invalid PNG file size {0} (expected at least 8)")]
+    InvalidPngFileSize(usize),
+
+    #[error("PNG file header doesn't match with standard PNG header")]
+    PngHeaderMismatch,
 }
