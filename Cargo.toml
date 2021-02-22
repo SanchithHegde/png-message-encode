@@ -13,7 +13,7 @@ license     = "MIT OR Apache-2.0"
 [dependencies]
 clap      = "3.0.0-beta.2"
 crc       = "1.8.1"
-thiserror = "1.0.23"
+thiserror = "1.0.24"
 
 [[bin]]
 name = "pngme"
