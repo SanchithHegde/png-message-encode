@@ -9,6 +9,16 @@ use clap::{AppSettings, Clap, ValueHint};
     setting = AppSettings::ColoredHelp,
     setting = AppSettings::SubcommandRequiredElseHelp,
 )]
+pub struct Opts {
+    /// Prints verbose information
+    #[clap(long, short, global(true))]
+    verbose: bool,
+
+    #[clap(subcommand)]
+    subcommand: SubCommand,
+}
+
+#[derive(Clap, Debug)]
 pub(crate) enum SubCommand {
     Encode(Encode),
     Decode(Decode),
