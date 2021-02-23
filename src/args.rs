@@ -69,14 +69,14 @@ pub(crate) struct Remove {
     pub(crate) chunk_type: String,
 }
 
-/// Print all messages in a PNG file. This could generate text which is NOT human-readable.
+/// Print a list of PNG chunks that can be searched for messages
 #[derive(Clap, Debug)]
 #[clap(
     setting = AppSettings::ColoredHelp,
     setting = AppSettings::ArgRequiredElseHelp,
 )]
 pub(crate) struct Print {
-    /// Path to the PNG file to print all the messages.
+    /// Path to the PNG file to list all chunks.
     #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
     pub(crate) in_file: PathBuf,
 }
