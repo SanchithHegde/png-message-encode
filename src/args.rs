@@ -37,7 +37,7 @@ pub(crate) struct Encode {
     #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
     pub(crate) in_file: PathBuf,
 
-    /// A 4-character long alphabetical ASCII string.
+    /// A 4-character long ASCII alphabetic string.
     pub(crate) chunk_type: String,
 
     /// Message to encode.
@@ -60,7 +60,7 @@ pub(crate) struct Decode {
     #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
     pub(crate) in_file: PathBuf,
 
-    /// A 4-character long alphabetical ASCII string.
+    /// A 4-character long ASCII alphabetic string.
     pub(crate) chunk_type: String,
 }
 
@@ -75,7 +75,7 @@ pub(crate) struct Remove {
     #[clap(parse(from_os_str), value_hint = ValueHint::FilePath)]
     pub(crate) in_file: PathBuf,
 
-    /// A 4-character long alphabetical ASCII string.
+    /// A 4-character long ASCII alphabetic string.
     pub(crate) chunk_type: String,
 }
 
