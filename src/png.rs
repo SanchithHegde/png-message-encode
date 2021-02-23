@@ -1,6 +1,6 @@
 use crate::{chunk::Chunk, chunk_type::ChunkType, error::Error};
 
-struct Png {
+pub(crate) struct Png {
     chunks: Vec<Chunk>,
 }
 
@@ -11,7 +11,7 @@ impl Png {
         Png { chunks }
     }
 
-    fn append_chunk(&mut self, chunk: Chunk) {
+    pub(crate) fn append_chunk(&mut self, chunk: Chunk) {
         self.chunks.push(chunk);
     }
 
@@ -43,7 +43,7 @@ impl Png {
             .find(|&chunk| chunk.chunk_type().to_string() == chunk_type)
     }
 
-    fn as_bytes(&self) -> Vec<u8> {
+    pub(crate) fn as_bytes(&self) -> Vec<u8> {
         self.chunks
             .iter()
             .fold(Png::STANDARD_HEADER.to_vec(), |mut bytes, chunk| {

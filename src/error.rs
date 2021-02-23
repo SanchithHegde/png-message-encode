@@ -26,4 +26,7 @@ pub(crate) enum Error {
 
     #[error("PNG file header doesn't match with standard PNG header")]
     PngHeaderMismatch,
+
+    #[error(transparent)]
+    IoError(#[from] std::io::Error),
 }

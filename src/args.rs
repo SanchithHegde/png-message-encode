@@ -12,10 +12,10 @@ use clap::{AppSettings, Clap, ValueHint};
 pub struct Opts {
     /// Prints verbose information
     #[clap(long, short, global(true))]
-    verbose: bool,
+    pub(crate) verbose: bool,
 
     #[clap(subcommand)]
-    subcommand: SubCommand,
+    pub(crate) subcommand: SubCommand,
 }
 
 #[derive(Clap, Debug)]
