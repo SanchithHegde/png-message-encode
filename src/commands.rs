@@ -41,3 +41,22 @@ pub(crate) fn encode(opts: args::Encode) -> Result<(), Error> {
 
     Ok(())
 }
+
+pub(crate) fn print(opts: args::Print) -> Result<(), Error> {
+    use std::{convert::TryFrom, io::Read};
+
+    let in_file = opts.in_file;
+    let input_file = in_file.clone();
+
+    let mut in_file = File::open(in_file)?;
+    let mut png_bytes = Vec::new();
+    in_file.read_to_end(&mut png_bytes)?;
+    let png = Png::try_from(png_bytes.as_slice())?;
+
+    println!("PNG chunks found in file '{}':\n", input_file.display());
+    for chunk in png.chunks() {
+        println!("{}", chunk.chunk_type());
+    }
+
+    Ok(())
+}

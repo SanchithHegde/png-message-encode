@@ -33,7 +33,7 @@ impl Png {
         &Png::STANDARD_HEADER
     }
 
-    fn chunks(&self) -> &[Chunk] {
+    pub(crate) fn chunks(&self) -> &[Chunk] {
         &self.chunks
     }
 

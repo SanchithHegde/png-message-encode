@@ -28,7 +28,7 @@ fn main() -> Result<(), Error> {
         SubCommand::Encode(args) => commands::encode(args),
         SubCommand::Decode(args) => Ok(()),
         SubCommand::Remove(args) => Ok(()),
-        SubCommand::Print(args) => Ok(()),
+        SubCommand::Print(args) => commands::print(args),
     }?;
 
     Ok(())
