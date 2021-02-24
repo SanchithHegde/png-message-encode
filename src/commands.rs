@@ -42,6 +42,28 @@ pub(crate) fn encode(opts: args::Encode) -> Result<(), Error> {
     Ok(())
 }
 
+pub(crate) fn decode(opts: args::Decode) -> Result<(), Error> {
+    use std::{convert::TryFrom, io::Read, str::FromStr};
+
+    let in_file = opts.in_file;
+    let chunk_type = opts.chunk_type;
+
+    let mut in_file = File::open(in_file)?;
+    let mut png_bytes = Vec::new();
+    in_file.read_to_end(&mut png_bytes)?;
+    let png = Png::try_from(png_bytes.as_slice())?;
+
+    let chunk = png.chunk_by_type(&chunk_type);
+    match chunk {
+        Some(chunk) => {
+            println!("{}", chunk.data_as_string()?);
+        }
+        None => return Err(Error::ChunkTypeNotFound(ChunkType::from_str(&chunk_type)?)),
+    }
+
+    Ok(())
+}
+
 pub(crate) fn print(opts: args::Print) -> Result<(), Error> {
     use std::{convert::TryFrom, io::Read};
 

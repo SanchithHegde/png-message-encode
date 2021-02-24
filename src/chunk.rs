@@ -39,7 +39,7 @@ impl Chunk {
         self.crc
     }
 
-    pub fn data_as_string(&self) -> Result<String, Error> {
+    pub(crate) fn data_as_string(&self) -> Result<String, Error> {
         Ok(String::from_utf8(self.chunk_data.clone())?)
     }
 
