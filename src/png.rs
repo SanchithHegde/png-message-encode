@@ -15,7 +15,7 @@ impl Png {
         self.chunks.push(chunk);
     }
 
-    fn remove_chunk(&mut self, chunk_type: &str) -> Result<Chunk, Error> {
+    pub(crate) fn remove_chunk(&mut self, chunk_type: &str) -> Result<Chunk, Error> {
         use std::str::FromStr;
 
         if let Some(index) = self

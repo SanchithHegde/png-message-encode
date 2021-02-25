@@ -64,6 +64,33 @@ pub(crate) fn decode(opts: args::Decode) -> Result<(), Error> {
     Ok(())
 }
 
+pub(crate) fn remove(opts: args::Remove) -> Result<(), Error> {
+    use std::{
+        convert::TryFrom,
+        io::{Read, Write},
+    };
+
+    let out_file = opts.in_file.clone();
+    let in_file = opts.in_file;
+    let chunk_type = opts.chunk_type;
+
+    let mut in_file = File::open(in_file)?;
+    let mut png_bytes = Vec::new();
+    in_file.read_to_end(&mut png_bytes)?;
+    let mut png = Png::try_from(png_bytes.as_slice())?;
+
+    png.remove_chunk(&chunk_type)?;
+
+    let mut out_file = OpenOptions::new()
+        .write(true)
+        .truncate(true)
+        .create(true)
+        .open(out_file)?;
+    out_file.write_all(&png.as_bytes())?;
+
+    Ok(())
+}
+
 pub(crate) fn print(opts: args::Print) -> Result<(), Error> {
     use std::{convert::TryFrom, io::Read};
 

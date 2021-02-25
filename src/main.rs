@@ -27,7 +27,7 @@ fn main() -> Result<(), Error> {
     match opts.subcommand {
         SubCommand::Encode(args) => commands::encode(args),
         SubCommand::Decode(args) => commands::decode(args),
-        SubCommand::Remove(args) => Ok(()),
+        SubCommand::Remove(args) => commands::remove(args),
         SubCommand::Print(args) => commands::print(args),
     }?;
 
