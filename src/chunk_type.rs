@@ -19,7 +19,10 @@ impl ChunkType {
     }
 
     fn is_valid(&self) -> bool {
-        self.is_reserved_bit_valid()
+        !self.is_critical()
+            && !self.is_public()
+            && self.is_reserved_bit_valid()
+            && self.is_safe_to_copy()
     }
 
     fn is_critical(&self) -> bool {
