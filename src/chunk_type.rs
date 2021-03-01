@@ -51,13 +51,10 @@ impl ChunkType {
     }
 
     /// Returns `true` if the chunk is considered valid.
-    /// A chunk is considered valid if it is ancillary, private, has the reserved bit set to 0, and
-    /// is safe to copy.
+    /// A valid chunk must have all characters in the type code to be ASCII alphabetic and the
+    /// reserved bit must be valid.
     fn is_valid(&self) -> bool {
-        !self.is_critical()
-            && !self.is_public()
-            && self.is_reserved_bit_valid()
-            && self.is_safe_to_copy()
+        self.bytes().iter().all(|&c| c.is_ascii_alphabetic()) && self.is_reserved_bit_valid()
     }
 
     /// Returns `true` if the chunk is a critical chunk.
