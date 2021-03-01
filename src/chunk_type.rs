@@ -1,14 +1,46 @@
 use crate::error::Error;
 
+/// A 4-byte chunk type code. Must consist of uppercase or lowercase ASCII letters only.
 #[derive(Debug, Eq, PartialEq)]
 pub(crate) struct ChunkType {
+    /// Four bits of the type code, namely bit 5 (value 32) of each byte, are used to convey chunk
+    /// properties.
+    /// The assigned properties can be determined by testing whether each letter of the type code
+    /// is uppercase (bit 5 is 0) or lowercase (bit 5 is 1).
+    ///
+    /// For more information, check the [PNG File Structure Specification] page.
+    ///
+    /// [PNG File Structure Specification]: http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html#Chunk-naming-conventions
+
+    /// # Ancillary bit: bit 5 of first byte
+    /// 0 (uppercase) = critical, 1 (lowercase) = ancillary.
+    ///
+    /// Chunks that are not strictly necessary in order to meaningfully display the contents of the
+    /// file are known as "ancillary" chunks.
+    /// Chunks that are necessary for successful display of the file's contents are called
+    /// "critical" chunks.
     ancillary: u8,
+
+    /// # Private bit: bit 5 of second byte
+    /// 0 (uppercase) = public, 1 (lowercase) = private.
+    ///
+    /// A public chunk is one that is part of the PNG specification or is registered in the list of
+    /// PNG special-purpose public chunk types.
     private: u8,
+
+    /// # Reserved bit: bit 5 of third byte
+    /// Must be 0 (uppercase) in files conforming to version 1.2 of the PNG specification.
     reserved: u8,
+
+    /// # Safe-to-copy bit: bit 5 of fourth byte
+    /// 0 (uppercase) = unsafe to copy, 1 (lowercase) = safe to copy.
+    ///
+    /// If a chunk's safe-to-copy bit is 0, it indicates that the chunk depends on the image data.
     safe_to_copy: u8,
 }
 
 impl ChunkType {
+    /// Returns the underlying fields as a byte array.
     pub fn bytes(&self) -> [u8; 4] {
         [
             self.ancillary,
@@ -18,6 +50,9 @@ impl ChunkType {
         ]
     }
 
+    /// Returns `true` if the chunk is considered valid.
+    /// A chunk is considered valid if it is ancillary, private, has the reserved bit set to 0, and
+    /// is safe to copy.
     fn is_valid(&self) -> bool {
         !self.is_critical()
             && !self.is_public()
@@ -25,24 +60,29 @@ impl ChunkType {
             && self.is_safe_to_copy()
     }
 
+    /// Returns `true` if the chunk is a critical chunk.
     fn is_critical(&self) -> bool {
         use std::ops::BitAnd;
 
         self.ancillary.bitand(32u8) == 0u8
     }
 
+    /// Returns `true` if the chunk is a public chunk.
     fn is_public(&self) -> bool {
         use std::ops::BitAnd;
 
         self.private.bitand(32u8) == 0u8
     }
 
+    /// Returns `true` if the reserved bit is set to zero.
     fn is_reserved_bit_valid(&self) -> bool {
         use std::ops::BitAnd;
 
         self.reserved.bitand(32u8) == 0u8
     }
 
+    /// Returns `true` if the chunk's safe-to-copy bit is 1, i.e., the chunk does not depend on the
+    /// image data.
     fn is_safe_to_copy(&self) -> bool {
         use std::ops::BitAnd;
 
