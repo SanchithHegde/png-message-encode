@@ -14,8 +14,6 @@ fn main() -> Result<(), Error> {
     use clap::Clap;
 
     let opts = Opts::parse();
-    println!("{:#?}", opts);
-
     let mut builder = pretty_env_logger::formatted_timed_builder();
 
     if opts.verbose {
