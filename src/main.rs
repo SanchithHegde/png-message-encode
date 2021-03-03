@@ -8,9 +8,8 @@ mod error;
 mod png;
 
 use args::{Opts, SubCommand};
-use error::Error;
 
-fn main() -> Result<(), Error> {
+fn main() {
     use clap::Clap;
 
     let opts = Opts::parse();
@@ -22,12 +21,12 @@ fn main() -> Result<(), Error> {
 
     builder.init();
 
-    match opts.subcommand {
+    if let Err(error) = match opts.subcommand {
         SubCommand::Encode(args) => commands::encode(args),
         SubCommand::Decode(args) => commands::decode(args),
         SubCommand::Remove(args) => commands::remove(args),
         SubCommand::Print(args) => commands::print(args),
-    }?;
-
-    Ok(())
+    } {
+        log::error!("{}", error);
+    }
 }
