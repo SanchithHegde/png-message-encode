@@ -5,9 +5,6 @@ My implementation of
 ([rendered book](https://picklenerd.github.io/pngme_book/introduction.html)),
 for educational purposes.
 
-**Status:** Most of the individual components "work" as expected (tests pass).
-I plan to refactor some of the components before putting it all together.
-
 ## Table of Contents <!-- omit in toc -->
 
 - [PNG Message Encode](#png-message-encode)
@@ -36,15 +33,125 @@ cargo install --path .
 
 ## Usage
 
-// TODO
-
 ### Encode a message into a PNG file
+
+```shell
+$ pngme encode
+pngme-encode
+Encode a message in a PNG file
+
+USAGE:
+    pngme encode [FLAGS] <in-file> <chunk-type> <message> [out-file]
+
+ARGS:
+    <in-file>       Path to the PNG file to encode the message in
+    <chunk-type>    A 4-character long ASCII alphabetic string
+    <message>       Message to encode
+    <out-file>      Path to the PNG file to save the encoded image as. Optional. If this is not
+                    specified, the input PNG file is updated in place
+
+FLAGS:
+    -h, --help       Prints help information
+    -v, --verbose    Prints verbose information
+    -V, --version    Prints version information
+```
+
+So, you'd run:
+
+```shell
+pngme encode /path/to/image.png teXt "This is a secret message!"
+```
+
+Alternatively, if you want the encoded image to be stored as a separate file,
+you'd run:
+
+```shell
+pngme encode /path/to/image.png teXt "This is a secret message!" /path/to/image_out.png
+```
 
 ### Decode a message stored in a PNG file
 
+```shell
+$ pngme decode
+pngme-decode
+Decode a message in a PNG file
+
+USAGE:
+    pngme decode [FLAGS] <in-file> <chunk-type>
+
+ARGS:
+    <in-file>       Path to the PNG file to decode the message from
+    <chunk-type>    A 4-character long ASCII alphabetic string
+
+FLAGS:
+    -h, --help       Prints help information
+    -v, --verbose    Prints verbose information
+    -V, --version    Prints version information
+```
+
+So, you'd run:
+
+```shell
+$ pngme decode /path/to/image.png teXt
+This is a secret message!
+```
+
 ### Remove a message from a PNG file
 
+```shell
+$ pngme remove
+pngme-remove
+Remove a message from a PNG file
+
+USAGE:
+    pngme remove [FLAGS] <in-file> <chunk-type>
+
+ARGS:
+    <in-file>       Path to the PNG file to remove the message from
+    <chunk-type>    A 4-character long ASCII alphabetic string
+
+FLAGS:
+    -h, --help       Prints help information
+    -v, --verbose    Prints verbose information
+    -V, --version    Prints version information
+```
+
+So, you'd run:
+
+```shell
+pngme remove /path/to/image.png teXt
+```
+
 ### Print a list of PNG chunks that can be searched for messages
+
+```shell
+$ pngme print
+pngme-print
+Print a list of PNG chunks that can be searched for messages
+
+USAGE:
+    pngme print [FLAGS] <in-file>
+
+ARGS:
+    <in-file>    Path to the PNG file to list all chunks
+
+FLAGS:
+    -h, --help       Prints help information
+    -v, --verbose    Prints verbose information
+    -V, --version    Prints version information
+```
+
+So, you'd run:
+
+```shell
+$ pngme print /path/to/image.png
+IHDR
+pHYs
+IDAT
+IDAT
+IEND
+teXt
+```
 
 ## Running tests
 
