@@ -1,5 +1,4 @@
-use crate::chunk_type::ChunkType;
-use crate::error::Error;
+use crate::{chunk_type::ChunkType, error::Error};
 
 /// A PNG chunk.
 pub(crate) struct Chunk {
