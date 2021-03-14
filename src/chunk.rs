@@ -1,14 +1,27 @@
 use crate::chunk_type::ChunkType;
 use crate::error::Error;
 
+/// A PNG chunk.
 pub(crate) struct Chunk {
+    /// A 4-byte unsigned integer depicting the number of bytes in the chunk's data field.
+    /// The length counts only the data field, not itself, the chunk type code, or the CRC.
+    /// Zero is a valid length.
     length: u32,
+
+    /// A 4-byte chunk type code. Must consist of uppercase or lowercase ASCII letters only.
     chunk_type: ChunkType,
+
+    /// The data bytes appropriate to the chunk type, if any.
+    /// This field can be of zero length.
     chunk_data: Vec<u8>,
+
+    /// A 4-byte CRC calculated on the preceding bytes in the chunk, including the chunk type code
+    /// and chunk data fields, but not including the length field.
     crc: u32,
 }
 
 impl Chunk {
+    /// Create a new `Chunk` given the chunk type code and the chunk data.
     pub fn new(chunk_type: ChunkType, chunk_data: Vec<u8>) -> Self {
         use crc::crc32;
 
@@ -23,26 +36,32 @@ impl Chunk {
         }
     }
 
+    /// Returns the number of bytes in the chunk's data field.
     fn length(&self) -> u32 {
         self.length
     }
 
+    /// Returns the chunk's chunk type code.
     pub fn chunk_type(&self) -> &ChunkType {
         &self.chunk_type
     }
 
+    /// Returns the chunk's data as a slice of bytes.
     fn data(&self) -> &[u8] {
         &self.chunk_data
     }
 
+    /// Returns the chunk's CRC.
     pub fn crc(&self) -> u32 {
         self.crc
     }
 
+    /// Tries to convert the chunk's data and return it as a [`String`](String).
     pub(crate) fn data_as_string(&self) -> Result<String, Error> {
         Ok(String::from_utf8(self.chunk_data.clone())?)
     }
 
+    /// Returns the underlying `Chunk` as a [`Vec`](Vec) of bytes.
     pub fn as_bytes(&self) -> Vec<u8> {
         let mut bytes = Vec::new();
         bytes.append(&mut self.length.to_be_bytes().to_vec());
