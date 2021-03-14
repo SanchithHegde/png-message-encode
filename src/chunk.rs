@@ -21,7 +21,7 @@ pub(crate) struct Chunk {
 
 impl Chunk {
     /// Create a new `Chunk` given the chunk type code and the chunk data.
-    pub fn new(chunk_type: ChunkType, chunk_data: Vec<u8>) -> Self {
+    pub(crate) fn new(chunk_type: ChunkType, chunk_data: Vec<u8>) -> Self {
         use crc::crc32;
 
         let mut crc_data = chunk_type.bytes().to_vec();
@@ -41,7 +41,7 @@ impl Chunk {
     }
 
     /// Returns the chunk's chunk type code.
-    pub fn chunk_type(&self) -> &ChunkType {
+    pub(crate) fn chunk_type(&self) -> &ChunkType {
         &self.chunk_type
     }
 
@@ -51,7 +51,7 @@ impl Chunk {
     }
 
     /// Returns the chunk's CRC.
-    pub fn crc(&self) -> u32 {
+    pub(crate) fn crc(&self) -> u32 {
         self.crc
     }
 
@@ -61,7 +61,7 @@ impl Chunk {
     }
 
     /// Returns the underlying `Chunk` as a [`Vec`](Vec) of bytes.
-    pub fn as_bytes(&self) -> Vec<u8> {
+    pub(crate) fn as_bytes(&self) -> Vec<u8> {
         let mut bytes = Vec::new();
         bytes.append(&mut self.length.to_be_bytes().to_vec());
         bytes.append(&mut self.chunk_type.bytes().to_vec());
