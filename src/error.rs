@@ -29,4 +29,7 @@ pub(crate) enum Error {
 
     #[error(transparent)]
     IoError(#[from] std::io::Error),
+
+    #[error("IEND chunk not found in PNG file. Is the PNG file corrupted?")]
+    IendChunkNotFound,
 }

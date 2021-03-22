@@ -11,8 +11,18 @@ impl Png {
         Png { chunks }
     }
 
-    pub(crate) fn append_chunk(&mut self, chunk: Chunk) {
-        self.chunks.push(chunk);
+    pub(crate) fn append_chunk(&mut self, chunk: Chunk) -> Result<(), Error> {
+        match self
+            .chunks
+            .iter()
+            .position(|chunk| chunk.chunk_type().to_string() == *"IEND")
+        {
+            Some(iend_index) => {
+                self.chunks.insert(iend_index, chunk);
+                Ok(())
+            }
+            None => Err(Error::IendChunkNotFound),
+        }
     }
 
     pub(crate) fn remove_chunk(&mut self, chunk_type: &str) -> Result<Chunk, Error> {
@@ -68,10 +78,9 @@ impl std::convert::TryFrom<&[u8]> for Png {
             return Err(Error::PngHeaderMismatch);
         }
 
-        let mut png = Png { chunks: Vec::new() };
-
         let mut ptr = 0;
         let value = &value[8..];
+        let mut chunks = Vec::new();
         while ptr < value.len() {
             let length = u32::from_be_bytes(value[ptr..ptr + 4].try_into()?) as usize;
             let offset = 4 + // 4 bytes for the chunk length
@@ -80,11 +89,11 @@ impl std::convert::TryFrom<&[u8]> for Png {
                 4; // 4 bytes for the chunk CRC
 
             let chunk = Chunk::try_from(&value[ptr..(ptr + offset)])?;
-            png.append_chunk(chunk);
+            chunks.push(chunk);
             ptr += offset;
         }
 
-        Ok(png)
+        Ok(Png::from_chunks(chunks))
     }
 }
 

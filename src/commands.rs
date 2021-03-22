@@ -27,10 +27,9 @@ pub(crate) fn encode(opts: args::Encode) -> Result<(), Error> {
     in_file.read_to_end(&mut png_bytes)?;
     let mut png = Png::try_from(png_bytes.as_slice())?;
 
-    png.append_chunk(Chunk::new(
-        ChunkType::from_str(&chunk_type)?,
-        message.as_bytes().to_vec(),
-    ));
+    let chunk_type = ChunkType::from_str(&chunk_type)?;
+
+    png.append_chunk(Chunk::new(chunk_type, message.as_bytes().to_vec()))?;
 
     let mut out_file = OpenOptions::new()
         .write(true)
