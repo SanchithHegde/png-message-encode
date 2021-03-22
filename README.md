@@ -35,7 +35,7 @@ cargo install --path .
 
 ### Encode a message into a PNG file
 
-```shell
+```text
 $ pngme encode
 pngme-encode
 Encode a message in a PNG file
@@ -58,20 +58,20 @@ FLAGS:
 
 So, you'd run:
 
-```shell
+```text
 pngme encode /path/to/image.png teXt "This is a secret message!"
 ```
 
 Alternatively, if you want the encoded image to be stored as a separate file,
 you'd run:
 
-```shell
+```text
 pngme encode /path/to/image.png teXt "This is a secret message!" /path/to/image_out.png
 ```
 
 ### Decode a message stored in a PNG file
 
-```shell
+```text
 $ pngme decode
 pngme-decode
 Decode a message in a PNG file
@@ -91,14 +91,14 @@ FLAGS:
 
 So, you'd run:
 
-```shell
+```text
 $ pngme decode /path/to/image.png teXt
 This is a secret message!
 ```
 
 ### Remove a message from a PNG file
 
-```shell
+```text
 $ pngme remove
 pngme-remove
 Remove a message from a PNG file
@@ -118,13 +118,13 @@ FLAGS:
 
 So, you'd run:
 
-```shell
+```text
 pngme remove /path/to/image.png teXt
 ```
 
 ### Print a list of PNG chunks that can be searched for messages
 
-```shell
+```text
 $ pngme print
 pngme-print
 Print a list of PNG chunks that can be searched for messages
@@ -143,14 +143,14 @@ FLAGS:
 
 So, you'd run:
 
-```shell
+```text
 $ pngme print /path/to/image.png
 IHDR
 pHYs
 IDAT
 IDAT
-IEND
 teXt
+IEND
 ```
 
 ## Running tests
