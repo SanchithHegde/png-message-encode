@@ -92,7 +92,9 @@ impl std::convert::TryFrom<[u8; 4]> for ChunkType {
 
     fn try_from(value: [u8; 4]) -> Result<Self, Self::Error> {
         if !value.iter().all(|c| c.is_ascii_alphabetic()) {
-            return Err(Error::ChunkTypeNotAsciiAlphabetic);
+            return Err(Error::InvalidChunkType(
+                std::str::from_utf8(&value).unwrap().to_string(),
+            ));
         }
 
         Ok(Self {
@@ -108,16 +110,11 @@ impl std::str::FromStr for ChunkType {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        if s.len() != 4 || !s.as_bytes().iter().all(|c| c.is_ascii_alphabetic()) {
+            return Err(Error::InvalidChunkType(s.to_string()));
+        }
+
         let s = s.as_bytes();
-
-        if s.len() != 4 {
-            return Err(Error::InvalidChunkTypeLength(s.len()));
-        }
-
-        if !s.iter().all(|c| c.is_ascii_alphabetic()) {
-            return Err(Error::ChunkTypeNotAsciiAlphabetic);
-        }
-
         Ok(Self {
             ancillary: s[0],
             private: s[1],

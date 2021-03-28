@@ -3,11 +3,8 @@ use thiserror::Error;
 #[allow(clippy::enum_variant_names)]
 #[derive(Debug, Error)]
 pub(crate) enum Error {
-    #[error("chunk type is not ASCII alphabetic")]
-    ChunkTypeNotAsciiAlphabetic,
-
-    #[error("invalid chunk type length {0} (expected 4)")]
-    InvalidChunkTypeLength(usize),
+    #[error("invalid chunk type '{0}' (expected a 4-character ASCII alphabetic string)")]
+    InvalidChunkType(String),
 
     #[error("calculated CRC doesn't match with chunk CRC")]
     CrcMismatch,
