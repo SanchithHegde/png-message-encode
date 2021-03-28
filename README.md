@@ -141,16 +141,13 @@ FLAGS:
     -V, --version    Prints version information
 ```
 
-So, you'd run:
+So, you'd run (provided there's a `teXt` chunk added to the image):
 
 ```text
 $ pngme print /path/to/image.png
-IHDR
-pHYs
-IDAT
-IDAT
+PNG chunks found in file '/path/to/image.png':
+
 teXt
-IEND
 ```
 
 ## Running tests
