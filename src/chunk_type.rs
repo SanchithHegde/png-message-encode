@@ -53,26 +53,26 @@ impl ChunkType {
     /// Returns `true` if the chunk is considered valid.
     /// A valid chunk must have all characters in the type code to be ASCII alphabetic and the
     /// reserved bit must be valid.
-    fn is_valid(&self) -> bool {
+    pub(crate) fn is_valid(&self) -> bool {
         self.bytes().iter().all(|&c| c.is_ascii_alphabetic()) && self.is_reserved_bit_valid()
     }
 
     /// Returns `true` if the chunk is a critical chunk.
-    fn is_critical(&self) -> bool {
+    pub(crate) fn is_critical(&self) -> bool {
         use std::ops::BitAnd;
 
         self.ancillary.bitand(32u8) == 0u8
     }
 
     /// Returns `true` if the chunk is a public chunk.
-    fn is_public(&self) -> bool {
+    pub(crate) fn is_public(&self) -> bool {
         use std::ops::BitAnd;
 
         self.private.bitand(32u8) == 0u8
     }
 
     /// Returns `true` if the reserved bit is set to zero.
-    fn is_reserved_bit_valid(&self) -> bool {
+    pub(crate) fn is_reserved_bit_valid(&self) -> bool {
         use std::ops::BitAnd;
 
         self.reserved.bitand(32u8) == 0u8
@@ -80,7 +80,7 @@ impl ChunkType {
 
     /// Returns `true` if the chunk's safe-to-copy bit is 1, i.e., the chunk does not depend on the
     /// image data.
-    fn is_safe_to_copy(&self) -> bool {
+    pub(crate) fn is_safe_to_copy(&self) -> bool {
         use std::ops::BitAnd;
 
         self.safe_to_copy.bitand(32u8) == 32u8

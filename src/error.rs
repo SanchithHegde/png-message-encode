@@ -6,6 +6,12 @@ pub(crate) enum Error {
     #[error("invalid chunk type '{0}' (expected a 4-character ASCII alphabetic string)")]
     InvalidChunkType(String),
 
+    #[error(
+        "invalid chunk type '{0}' (expected a chunk type which is ancillary, private, has a valid \
+        reserved bit and is safe-to-copy)"
+    )]
+    UnmodifiableChunkType(crate::chunk_type::ChunkType),
+
     #[error("calculated CRC doesn't match with chunk CRC")]
     CrcMismatch,
 
