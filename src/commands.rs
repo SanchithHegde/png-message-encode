@@ -23,7 +23,6 @@ pub(crate) fn encode(opts: args::Encode) -> Result<(), Error> {
     use std::{
         convert::TryFrom,
         io::{Read, Write},
-        str::FromStr,
     };
 
     let out_file = if opts.out_file.is_none() {
@@ -39,8 +38,6 @@ pub(crate) fn encode(opts: args::Encode) -> Result<(), Error> {
     let mut png_bytes = Vec::new();
     in_file.read_to_end(&mut png_bytes)?;
     let mut png = Png::try_from(png_bytes.as_slice())?;
-
-    let chunk_type = ChunkType::from_str(&chunk_type)?;
 
     // Allow only safe-to-modify chunks
     if !chunk_type.is_modifiable() {
@@ -59,16 +56,14 @@ pub(crate) fn encode(opts: args::Encode) -> Result<(), Error> {
 }
 
 pub(crate) fn decode(opts: args::Decode) -> Result<(), Error> {
-    use std::{convert::TryFrom, io::Read, str::FromStr};
+    use std::{convert::TryFrom, io::Read};
 
     let in_file = opts.in_file;
     let chunk_type = opts.chunk_type;
 
     // Allow only safe-to-modify chunks
-    if !ChunkType::from_str(&chunk_type)?.is_modifiable() {
-        return Err(Error::UnmodifiableChunkType(ChunkType::from_str(
-            &chunk_type,
-        )?));
+    if !chunk_type.is_modifiable() {
+        return Err(Error::UnmodifiableChunkType(chunk_type));
     }
 
     let mut in_file = File::open(in_file)?;
@@ -76,12 +71,12 @@ pub(crate) fn decode(opts: args::Decode) -> Result<(), Error> {
     in_file.read_to_end(&mut png_bytes)?;
     let png = Png::try_from(png_bytes.as_slice())?;
 
-    let chunk = png.chunk_by_type(&chunk_type);
+    let chunk = png.chunk_by_type(&chunk_type.to_string());
     match chunk {
         Some(chunk) => {
             println!("{}", chunk.data_as_string()?);
         }
-        None => return Err(Error::ChunkTypeNotFound(ChunkType::from_str(&chunk_type)?)),
+        None => return Err(Error::ChunkTypeNotFound(chunk_type)),
     }
 
     Ok(())
@@ -99,10 +94,8 @@ pub(crate) fn remove(opts: args::Remove) -> Result<(), Error> {
     let chunk_type = opts.chunk_type;
 
     // Allow only safe-to-modify chunks
-    if !ChunkType::from_str(&chunk_type)?.is_modifiable() {
-        return Err(Error::UnmodifiableChunkType(ChunkType::from_str(
-            &chunk_type,
-        )?));
+    if !chunk_type.is_modifiable() {
+        return Err(Error::UnmodifiableChunkType(chunk_type));
     }
 
     let mut in_file = File::open(in_file)?;
@@ -110,7 +103,7 @@ pub(crate) fn remove(opts: args::Remove) -> Result<(), Error> {
     in_file.read_to_end(&mut png_bytes)?;
     let mut png = Png::try_from(png_bytes.as_slice())?;
 
-    png.remove_chunk(&chunk_type)?;
+    png.remove_chunk(&chunk_type.to_string())?;
 
     let mut out_file = OpenOptions::new()
         .write(true)

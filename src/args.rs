@@ -38,7 +38,7 @@ pub(crate) struct Encode {
     pub(crate) in_file: PathBuf,
 
     /// A 4-character long ASCII alphabetic string.
-    pub(crate) chunk_type: String,
+    pub(crate) chunk_type: crate::chunk_type::ChunkType,
 
     /// Message to encode.
     pub(crate) message: String,
@@ -61,7 +61,7 @@ pub(crate) struct Decode {
     pub(crate) in_file: PathBuf,
 
     /// A 4-character long ASCII alphabetic string.
-    pub(crate) chunk_type: String,
+    pub(crate) chunk_type: crate::chunk_type::ChunkType,
 }
 
 /// Remove a message from a PNG file.
@@ -76,7 +76,7 @@ pub(crate) struct Remove {
     pub(crate) in_file: PathBuf,
 
     /// A 4-character long ASCII alphabetic string.
-    pub(crate) chunk_type: String,
+    pub(crate) chunk_type: crate::chunk_type::ChunkType,
 }
 
 /// Print a list of PNG chunks that can be searched for messages
