@@ -43,6 +43,12 @@ pub(crate) fn encode(opts: args::Encode) -> Result<(), Error> {
     if !chunk_type.is_modifiable() {
         return Err(Error::UnmodifiableChunkType(chunk_type));
     }
+
+    // Disallow duplicate chunk to be added
+    if png.chunk_by_type(&chunk_type.to_string()).is_some() {
+        return Err(Error::ChunkTypeExists(chunk_type));
+    }
+
     png.append_chunk(Chunk::new(chunk_type, message.as_bytes().to_vec()))?;
 
     let mut out_file = OpenOptions::new()

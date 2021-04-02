@@ -35,4 +35,7 @@ pub(crate) enum Error {
 
     #[error("IEND chunk not found in PNG file. Is the PNG file corrupted?")]
     IendChunkNotFound,
+
+    #[error("chunk of type {0} already exists in file!")]
+    ChunkTypeExists(crate::chunk_type::ChunkType),
 }
