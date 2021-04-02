@@ -86,7 +86,6 @@ pub(crate) fn remove(opts: args::Remove) -> Result<(), Error> {
     use std::{
         convert::TryFrom,
         io::{Read, Write},
-        str::FromStr,
     };
 
     let out_file = opts.in_file.clone();
