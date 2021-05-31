@@ -1,4 +1,8 @@
+use crc::{Crc, CRC_32_ISO_HDLC};
+
 use crate::{chunk_type::ChunkType, error::Error};
+
+const CRC_32: Crc<u32> = Crc::<u32>::new(&CRC_32_ISO_HDLC);
 
 /// A PNG chunk.
 pub(crate) struct Chunk {
@@ -22,11 +26,9 @@ pub(crate) struct Chunk {
 impl Chunk {
     /// Create a new `Chunk` given the chunk type code and the chunk data.
     pub(crate) fn new(chunk_type: ChunkType, chunk_data: Vec<u8>) -> Self {
-        use crc::crc32;
-
         let mut crc_data = chunk_type.bytes().to_vec();
         crc_data.append(&mut chunk_data.clone());
-        let crc = crc32::checksum_ieee(&crc_data);
+        let crc = CRC_32.checksum(&&crc_data);
         Chunk {
             length: chunk_data.len() as u32,
             chunk_type,
@@ -78,15 +80,13 @@ impl std::convert::TryFrom<&[u8]> for Chunk {
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
         use std::convert::TryInto;
 
-        use crc::crc32;
-
         let length = u32::from_be_bytes(value[0..4].try_into()?);
         let chunk_type: [u8; 4] = value[4..8].try_into()?;
         let chunk_type = ChunkType::try_from(chunk_type)?;
         let chunk_data = value[8..8 + length as usize].to_vec();
         let crc = u32::from_be_bytes(value[8 + length as usize..].try_into()?);
 
-        if crc32::checksum_ieee(&value[4..8 + length as usize]) != crc {
+        if CRC_32.checksum(&value[4..8 + length as usize]) != crc {
             return Err(Error::CrcMismatch);
         }
 
