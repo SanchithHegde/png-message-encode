@@ -118,7 +118,7 @@ mod tests {
     use std::convert::TryFrom;
 
     fn testing_chunks() -> Vec<Chunk> {
-        #![allow(clippy::clippy::vec_init_then_push)]
+        #![allow(clippy::vec_init_then_push)]
         let mut chunks = Vec::new();
 
         chunks.push(chunk_from_strings("IHDR", "").unwrap());

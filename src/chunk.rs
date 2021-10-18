@@ -28,7 +28,7 @@ impl Chunk {
     pub(crate) fn new(chunk_type: ChunkType, chunk_data: Vec<u8>) -> Self {
         let mut crc_data = chunk_type.bytes().to_vec();
         crc_data.append(&mut chunk_data.clone());
-        let crc = CRC_32.checksum(&&crc_data);
+        let crc = CRC_32.checksum(&crc_data);
         Chunk {
             length: chunk_data.len() as u32,
             chunk_type,
