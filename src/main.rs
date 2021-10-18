@@ -10,7 +10,7 @@ mod png;
 use args::{Opts, SubCommand};
 
 fn main() {
-    use clap::Clap;
+    use clap::Parser;
 
     let opts = Opts::parse();
     let mut builder = pretty_env_logger::formatted_timed_builder();

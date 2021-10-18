@@ -1,12 +1,11 @@
 use std::path::PathBuf;
 
-use clap::{AppSettings, Clap, ValueHint};
+use clap::{AppSettings, Parser, ValueHint};
 
-#[derive(Clap, Debug)]
+#[derive(Debug, Parser)]
 #[clap(
     author,
     version,
-    setting = AppSettings::ColoredHelp,
     setting = AppSettings::SubcommandRequiredElseHelp,
 )]
 pub struct Opts {
@@ -18,7 +17,7 @@ pub struct Opts {
     pub(crate) subcommand: SubCommand,
 }
 
-#[derive(Clap, Debug)]
+#[derive(Debug, Parser)]
 pub(crate) enum SubCommand {
     Encode(Encode),
     Decode(Decode),
@@ -27,9 +26,8 @@ pub(crate) enum SubCommand {
 }
 
 /// Encode a message in a PNG file.
-#[derive(Clap, Debug)]
+#[derive(Debug, Parser)]
 #[clap(
-    setting = AppSettings::ColoredHelp,
     setting = AppSettings::ArgRequiredElseHelp,
 )]
 pub(crate) struct Encode {
@@ -50,9 +48,8 @@ pub(crate) struct Encode {
 }
 
 /// Decode a message in a PNG file.
-#[derive(Clap, Debug)]
+#[derive(Debug, Parser)]
 #[clap(
-    setting = AppSettings::ColoredHelp,
     setting = AppSettings::ArgRequiredElseHelp,
 )]
 pub(crate) struct Decode {
@@ -65,9 +62,8 @@ pub(crate) struct Decode {
 }
 
 /// Remove a message from a PNG file.
-#[derive(Clap, Debug)]
+#[derive(Debug, Parser)]
 #[clap(
-    setting = AppSettings::ColoredHelp,
     setting = AppSettings::ArgRequiredElseHelp,
 )]
 pub(crate) struct Remove {
@@ -80,9 +76,8 @@ pub(crate) struct Remove {
 }
 
 /// Print a list of PNG chunks that can be searched for messages
-#[derive(Clap, Debug)]
+#[derive(Debug, Parser)]
 #[clap(
-    setting = AppSettings::ColoredHelp,
     setting = AppSettings::ArgRequiredElseHelp,
 )]
 pub(crate) struct Print {
