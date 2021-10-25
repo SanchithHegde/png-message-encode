@@ -78,8 +78,6 @@ impl std::convert::TryFrom<&[u8]> for Chunk {
     type Error = Error;
 
     fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-        use std::convert::TryInto;
-
         let length = u32::from_be_bytes(value[0..4].try_into()?);
         let chunk_type: [u8; 4] = value[4..8].try_into()?;
         let chunk_type = ChunkType::try_from(chunk_type)?;
@@ -115,8 +113,6 @@ impl std::fmt::Display for Chunk {
 
 #[cfg(test)]
 mod tests {
-    use std::convert::TryFrom;
-
     use super::*;
 
     fn testing_chunk() -> Chunk {

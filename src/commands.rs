@@ -20,10 +20,7 @@ impl ChunkType {
 }
 
 pub(crate) fn encode(opts: args::Encode) -> Result<(), Error> {
-    use std::{
-        convert::TryFrom,
-        io::{Read, Write},
-    };
+    use std::io::{Read, Write};
 
     let out_file = if opts.out_file.is_none() {
         opts.in_file.clone()
@@ -62,7 +59,7 @@ pub(crate) fn encode(opts: args::Encode) -> Result<(), Error> {
 }
 
 pub(crate) fn decode(opts: args::Decode) -> Result<(), Error> {
-    use std::{convert::TryFrom, io::Read};
+    use std::io::Read;
 
     let in_file = opts.in_file;
     let chunk_type = opts.chunk_type;
@@ -89,10 +86,7 @@ pub(crate) fn decode(opts: args::Decode) -> Result<(), Error> {
 }
 
 pub(crate) fn remove(opts: args::Remove) -> Result<(), Error> {
-    use std::{
-        convert::TryFrom,
-        io::{Read, Write},
-    };
+    use std::io::{Read, Write};
 
     let out_file = opts.in_file.clone();
     let in_file = opts.in_file;
@@ -121,7 +115,7 @@ pub(crate) fn remove(opts: args::Remove) -> Result<(), Error> {
 }
 
 pub(crate) fn print(opts: args::Print) -> Result<(), Error> {
-    use std::{convert::TryFrom, io::Read};
+    use std::io::Read;
 
     let in_file = opts.in_file;
     let input_file = in_file.clone();

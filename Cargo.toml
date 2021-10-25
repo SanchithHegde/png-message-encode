@@ -2,7 +2,7 @@
 name        = "png-message-encode"
 version     = "0.1.0"
 authors     = [ "Sanchith Hegde <sanchith.hegde01@gmail.com>" ]
-edition     = "2018"
+edition     = "2021"
 description = "CLI tool to encode messages in PNG files."
 readme      = "README.md"
 repository  = "https://github.com/SanchithHegde/png-message-encode"
