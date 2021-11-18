@@ -25,6 +25,7 @@ pub(crate) struct Chunk {
 
 impl Chunk {
     /// Create a new `Chunk` given the chunk type code and the chunk data.
+    #[allow(clippy::cast_possible_truncation)]
     pub(crate) fn new(chunk_type: ChunkType, chunk_data: Vec<u8>) -> Self {
         let mut crc_data = chunk_type.bytes().to_vec();
         crc_data.append(&mut chunk_data.clone());
@@ -38,6 +39,7 @@ impl Chunk {
     }
 
     /// Returns the number of bytes in the chunk's data field.
+    #[allow(dead_code)]
     fn length(&self) -> u32 {
         self.length
     }
@@ -47,12 +49,8 @@ impl Chunk {
         &self.chunk_type
     }
 
-    /// Returns the chunk's data as a slice of bytes.
-    fn data(&self) -> &[u8] {
-        &self.chunk_data
-    }
-
     /// Returns the chunk's CRC.
+    #[allow(dead_code)]
     pub(crate) fn crc(&self) -> u32 {
         self.crc
     }
@@ -119,7 +117,7 @@ mod tests {
         let data_length: u32 = 42;
         let chunk_type = "RuSt".as_bytes();
         let message_bytes = "This is where your secret message will be!".as_bytes();
-        let crc: u32 = 2882656334;
+        let crc: u32 = 2_882_656_334;
 
         let chunk_data: Vec<u8> = data_length
             .to_be_bytes()
@@ -156,7 +154,7 @@ mod tests {
     #[test]
     fn test_chunk_crc() {
         let chunk = testing_chunk();
-        assert_eq!(chunk.crc(), 2882656334);
+        assert_eq!(chunk.crc(), 2_882_656_334);
     }
 
     #[test]

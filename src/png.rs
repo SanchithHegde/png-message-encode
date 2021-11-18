@@ -39,10 +39,6 @@ impl Png {
         }
     }
 
-    fn header(&self) -> &[u8; 8] {
-        &Png::STANDARD_HEADER
-    }
-
     pub(crate) fn chunks(&self) -> &[Chunk] {
         &self.chunks
     }

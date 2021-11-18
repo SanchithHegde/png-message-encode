@@ -61,21 +61,21 @@ impl ChunkType {
     pub(crate) fn is_critical(&self) -> bool {
         use std::ops::BitAnd;
 
-        self.ancillary.bitand(32u8) == 0u8
+        self.ancillary.bitand(32_u8) == 0_u8
     }
 
     /// Returns `true` if the chunk is a public chunk.
     pub(crate) fn is_public(&self) -> bool {
         use std::ops::BitAnd;
 
-        self.private.bitand(32u8) == 0u8
+        self.private.bitand(32_u8) == 0_u8
     }
 
     /// Returns `true` if the reserved bit is set to zero.
     pub(crate) fn is_reserved_bit_valid(&self) -> bool {
         use std::ops::BitAnd;
 
-        self.reserved.bitand(32u8) == 0u8
+        self.reserved.bitand(32_u8) == 0_u8
     }
 
     /// Returns `true` if the chunk's safe-to-copy bit is 1, i.e., the chunk does not depend on the
@@ -83,7 +83,7 @@ impl ChunkType {
     pub(crate) fn is_safe_to_copy(&self) -> bool {
         use std::ops::BitAnd;
 
-        self.safe_to_copy.bitand(32u8) == 32u8
+        self.safe_to_copy.bitand(32_u8) == 32_u8
     }
 }
 
@@ -91,7 +91,7 @@ impl std::convert::TryFrom<[u8; 4]> for ChunkType {
     type Error = Error;
 
     fn try_from(value: [u8; 4]) -> Result<Self, Self::Error> {
-        if !value.iter().all(|c| c.is_ascii_alphabetic()) {
+        if !value.iter().all(u8::is_ascii_alphabetic) {
             return Err(Error::InvalidChunkType(
                 std::str::from_utf8(&value).unwrap().to_string(),
             ));
@@ -110,7 +110,7 @@ impl std::str::FromStr for ChunkType {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if s.len() != 4 || !s.as_bytes().iter().all(|c| c.is_ascii_alphabetic()) {
+        if s.len() != 4 || !s.as_bytes().iter().all(u8::is_ascii_alphabetic) {
             return Err(Error::InvalidChunkType(s.to_string()));
         }
 

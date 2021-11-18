@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 use log::LevelFilter;
 
 mod args;
