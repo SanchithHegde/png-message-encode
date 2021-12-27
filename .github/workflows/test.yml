@@ -9,6 +9,8 @@ on:
       - "**/Cargo.lock"
       - "src/**"
   push:
+    branches:
+      - main
     paths:
       - "**/Cargo.toml"
       - "**/Cargo.lock"
