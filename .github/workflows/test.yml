@@ -8,6 +8,7 @@ on:
       - "**/Cargo.toml"
       - "**/Cargo.lock"
       - "src/**"
+      - ".github/workflows/**"
   push:
     branches:
       - main
@@ -15,6 +16,7 @@ on:
       - "**/Cargo.toml"
       - "**/Cargo.lock"
       - "src/**"
+      - ".github/workflows/**"
 
 jobs:
   test:
